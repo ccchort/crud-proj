@@ -1,13 +1,15 @@
 import 'dotenv/config'; 
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors'
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
 });
 const app = express();
-app.use(morgan('dev'))
+app.use(morgan('dev'));
+app.use(cors());
 app.use(express.json());
 
 app.get('/status', (req, res) => {
