@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const users = ref([]);
-const isLoading = ref(true);
+let timer = null;
 
 const data = async () => {
   try {
@@ -10,18 +10,22 @@ const data = async () => {
     users.value = await response.json();
   } catch (error) {
     console.error('Error:', error);
-  } finally {
-    isLoading.value = false;
-  }
+  };
 }
-onMounted(data);
+onMounted(() => {
+  data();
+  timer = setInterval(data, 3000);
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
+});
 </script>
 
 <template>
   <div id="app">
     <h1>таблица пользователей</h1>
-    <p v-if="isLoading">Загрузка данных</p>
-    <table v-else class="table">
+    <table class="table">
       <thead>
         <tr>
           <th>ID</th>
